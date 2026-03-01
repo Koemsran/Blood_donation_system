@@ -1,0 +1,69 @@
+/* Dashboard Styling */
+
+body {
+    background-color: #ffffff;
+    color: #333;
+}
+
+.dashboard-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.dashboard-header img {
+    height: 50px;
+    margin-right: 1rem;
+}
+
+.dashboard-header h1 {
+    margin: 0;
+}
+
+.dashboard-header p {
+    margin: 0;
+}
+
+/* Card styling */
+.border-left-danger {
+    border-left: 4px solid #dc3545;
+}
+
+.border-left-primary {
+    border-left: 4px solid #007bff;
+}
+
+.border-left-warning {
+    border-left: 4px solid #ffc107;
+}
+
+.border-left-success {
+    border-left: 4px solid #28a745;
+}
+
+.card h5 {
+    color: #333;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+/* Navbar styling */
+.navbar-dark.bg-danger {
+    background-color: #dc3545 !important;
+}
+
+/* Button styling */
+.btn-danger {
+    background-color: #dc3545;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+/* Badge styling */
+.badge.bg-danger {
+    background-color: #dc3545 !important;
+}
