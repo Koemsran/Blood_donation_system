@@ -23,4 +23,20 @@ class Patient extends Model
     {
         return $this->hasMany(BloodRequest::class);
     }
+
+    public function requestBlood(string $bloodType, int $quantity): BloodRequest
+    {
+        return $this->bloodRequests()->create([
+            'hospital_id' => $this->hospital_id,
+            'blood_type' => $bloodType,
+            'quantity' => $quantity,
+            'request_date' => now(),
+            'status' => 'pending',
+        ]);
+    }
+
+    public function viewRequestStatus()
+    {
+        return $this->bloodRequests()->orderBy('request_date', 'desc')->get();
+    }
 }

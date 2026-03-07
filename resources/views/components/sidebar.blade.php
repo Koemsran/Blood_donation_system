@@ -12,7 +12,7 @@
         </a>
         
         <!-- Inventory Link -->
-        <a href="#" class="sidebar-nav-link">
+        <a href="{{ route('inventory.index') }}" class="sidebar-nav-link {{ Route::currentRouteName() == 'inventory.index' ? 'active' : '' }}">
             <i class="fas fa-boxes"></i> 
             <span>Inventory</span>
         </a>
@@ -21,39 +21,36 @@
         <div class="nav-section-title management">Management</div>
         
         <!-- Donors Link -->
-        <a href="{{ route('donors.index') }}" class="sidebar-nav-link {{ Route::currentRouteName() == 'donors.index' ? 'active' : '' }}">
+        <a href="{{ route('donors.index') }}" class="sidebar-nav-link {{ Route::is('donors.*') ? 'active' : '' }}">
             <i class="fas fa-users"></i> 
             <span>Donors</span>
         </a>
         
         <!-- Hospitals Link -->
-        <a href="#" class="sidebar-nav-link">
+        <a href="{{ route('hospitals.index') }}" class="sidebar-nav-link {{ Route::is('hospitals.*') ? 'active' : '' }}">
             <i class="fas fa-clinic-medical"></i> 
             <span>Hospitals</span>
         </a>
         
         <!-- Staff Link -->
-        <a href="#" class="sidebar-nav-link">
+        <a href="{{ route('staff.index') }}" class="sidebar-nav-link {{ Route::is('staff.*') ? 'active' : '' }}">
             <i class="fas fa-user-tie"></i> 
             <span>Staff</span>
+        </a>
+
+        <!-- Users Link -->
+        <a href="{{ route('users.index') }}" class="sidebar-nav-link {{ Route::is('users.*') ? 'active' : '' }}">
+            <i class="fas fa-user-shield"></i>
+            <span>Users</span>
         </a>
 
         <!-- Other Section -->
         <div class="nav-section-title management">Other</div>
         
         <!-- Reports Link -->
-        <a href="#" class="sidebar-nav-link">
+        <a href="{{ route('reports.index') }}" class="sidebar-nav-link {{ Route::is('reports.*') ? 'active' : '' }}">
             <i class="fas fa-file-alt"></i> 
             <span>Reports</span>
         </a>
-
-        <!-- Logout Link -->
-        <form action="{{ route('logout') }}" method="POST" style="display: contents;">
-            @csrf
-            <button type="submit" class="sidebar-nav-link" style="width: 100%; border: none; background: none; cursor: pointer; text-align: left;">
-                <i class="fas fa-sign-out-alt"></i>
-                <span>Logout</span>
-            </button>
-        </form>
     </nav>
 </div>

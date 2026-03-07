@@ -17,4 +17,20 @@ class Staff extends Model
     {
         return $this->belongsTo(BloodBank::class, 'assigned_bank_id');
     }
+
+    public function processBloodRequest(BloodRequest $request, string $status): void
+    {
+        $request->updateRequestStatus($status);
+    }
+
+    public function updateStock(string $bloodType, int $quantity): ?BloodStock
+    {
+        $stock = $this->assignedBank?->bloodStocks()
+            ->where('blood_type', $bloodType)
+            ->first();
+
+        $stock?->updateStock($quantity);
+
+        return $stock;
+    }
 }

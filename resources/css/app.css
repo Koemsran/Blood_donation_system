@@ -1,3 +1,11 @@
+@import './dashboard.css';
+@import './inventory.css';
+@import './donors.css';
+@import './staff.css';
+@import './hospitals.css';
+@import './reports.css';
+@import './users.css';
+
 /* ============================================
    GLOBAL STYLING - SINGLE SOURCE OF TRUTH
    All page styles managed in one place

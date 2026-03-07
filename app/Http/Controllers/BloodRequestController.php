@@ -40,11 +40,11 @@ class BloodRequestController extends Controller
     public function updateStatus(Request $request, BloodRequest $bloodRequest)
     {
         $validated = $request->validate([
-            'status' => 'required|string|in:pending,approved,completed,cancelled',
+            'status' => 'required|string|in:pending,approved,rejected,completed,cancelled',
         ]);
 
         $bloodRequest->updateRequestStatus($validated['status']);
-        return redirect()->route('blood-requests.show', $bloodRequest)->with('success', 'Status updated successfully!');
+        return redirect()->back()->with('success', 'Status updated successfully!');
     }
 
     public function destroy(BloodRequest $bloodRequest)

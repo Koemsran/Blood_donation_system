@@ -27,4 +27,14 @@ class Donor extends Model
     {
         return $this->hasMany(TestReport::class);
     }
+
+    public function donateBlood(): void
+    {
+        $this->update(['last_donation_date' => now()]);
+    }
+
+    public function viewDonationHistory()
+    {
+        return $this->testReports()->orderBy('test_date', 'desc')->get();
+    }
 }

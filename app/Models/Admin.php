@@ -11,18 +11,13 @@ class Admin extends Model
         'email',
     ];
 
-    public function manageUsers()
+    public function bloodBanks()
     {
-        // Method to manage users
+        return $this->hasMany(BloodBank::class);
     }
 
-    public function manageBloodStock()
+    public function hospitals()
     {
-        // Method to manage blood stock
-    }
-
-    public function generateReports()
-    {
-        // Method to generate reports
+        return $this->hasMany(Hospital::class);
     }
 }

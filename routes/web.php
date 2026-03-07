@@ -4,6 +4,11 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DonorController;
 use App\Http\Controllers\BloodBankController;
 use App\Http\Controllers\BloodRequestController;
+use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\StaffController;
+use App\Http\Controllers\HospitalController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LogoutController;
@@ -29,6 +34,11 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
+    Route::get('/staff', [StaffController::class, 'index'])->name('staff.index');
+    Route::get('/hospitals', [HospitalController::class, 'index'])->name('hospitals.index');
+    Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::get('/users', [UserManagementController::class, 'index'])->name('users.index');
 
     // Donors Routes
     Route::resource('donors', DonorController::class);

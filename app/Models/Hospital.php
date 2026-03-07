@@ -7,10 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 class Hospital extends Model
 {
     protected $fillable = [
+        'admin_id',
         'name',
         'location',
         'contact',
     ];
+
+    public function admin()
+    {
+        return $this->belongsTo(Admin::class);
+    }
 
     public function patients()
     {
@@ -22,13 +28,14 @@ class Hospital extends Model
         return $this->hasMany(BloodRequest::class);
     }
 
-    public function placeBloodRequest()
+    public function placeBloodRequest(int $patientId, string $bloodType, int $quantity): BloodRequest
     {
-        // Method to place blood request
-    }
-
-    public function receiveBloodSupply()
-    {
-        // Method to receive blood supply
+        return $this->bloodRequests()->create([
+            'patient_id' => $patientId,
+            'blood_type' => $bloodType,
+            'quantity' => $quantity,
+            'request_date' => now(),
+            'status' => 'pending',
+        ]);
     }
 }

@@ -10,6 +10,7 @@ return new class extends Migration
     {
         Schema::create('hospitals', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('admin_id')->nullable()->constrained('admins')->onDelete('set null');
             $table->string('name');
             $table->string('location');
             $table->string('contact');

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class BloodRequest extends Model
 {
     protected $fillable = [
+        'hospital_id',
         'patient_id',
         'blood_type',
         'quantity',
@@ -18,23 +19,22 @@ class BloodRequest extends Model
         'request_date' => 'datetime',
     ];
 
+    public function hospital()
+    {
+        return $this->belongsTo(Hospital::class);
+    }
+
     public function patient()
     {
         return $this->belongsTo(Patient::class);
     }
 
-    public function createRequest()
+    public function updateRequestStatus(string $status): void
     {
-        // Method to create blood request
+        $this->update(['status' => $status]);
     }
 
-    public function updateRequestStatus($status)
-    {
-        $this->status = $status;
-        $this->save();
-    }
-
-    public function cancelRequest()
+    public function cancelRequest(): void
     {
         $this->updateRequestStatus('cancelled');
     }
