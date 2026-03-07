@@ -31,6 +31,12 @@
             <i class="fas fa-clinic-medical"></i> 
             <span>Hospitals</span>
         </a>
+
+        <!-- Donations Link -->
+        <a href="{{ route('donations.index') }}" class="sidebar-nav-link {{ Route::is('donations.*') ? 'active' : '' }}">
+            <i class="fas fa-droplet"></i>
+            <span>Donations</span>
+        </a>
         
         <!-- Staff Link -->
         <a href="{{ route('staff.index') }}" class="sidebar-nav-link {{ Route::is('staff.*') ? 'active' : '' }}">

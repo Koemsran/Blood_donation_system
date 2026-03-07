@@ -169,8 +169,12 @@
 /* ===== Bottom Grid (Donations + Requests) ===== */
 .bottom-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 3fr 1fr;
     gap: 24px;
+}
+
+.bottom-grid > * {
+    min-width: 0;
 }
 
 /* ===== Recent Donations Table ===== */
@@ -193,10 +197,17 @@
     font-size: 13px;
 }
 
+.donations-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
 .donations-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 13px;
+    min-width: 500px;
 }
 
 .donations-table thead tr {

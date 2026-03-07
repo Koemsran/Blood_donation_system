@@ -8,6 +8,7 @@ use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\HospitalController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\DonationController;
 use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -35,6 +36,8 @@ Route::middleware('auth')->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
+    Route::post('/inventory', [InventoryController::class, 'store'])->name('inventory.store');
+    Route::put('/inventory/{bloodStock}', [InventoryController::class, 'update'])->name('inventory.update');
     Route::get('/staff', [StaffController::class, 'index'])->name('staff.index');
     Route::post('/staff', [StaffController::class, 'store'])->name('staff.store');
     Route::put('/staff/{staff}', [StaffController::class, 'update'])->name('staff.update');
@@ -43,6 +46,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/hospitals', [HospitalController::class, 'store'])->name('hospitals.store');
     Route::put('/hospitals/{hospital}', [HospitalController::class, 'update'])->name('hospitals.update');
     Route::delete('/hospitals/{hospital}', [HospitalController::class, 'destroy'])->name('hospitals.destroy');
+    Route::get('/donations', [DonationController::class, 'index'])->name('donations.index');
+    Route::post('/donations', [DonationController::class, 'store'])->name('donations.store');
+    Route::post('/donations/{donation}/status', [DonationController::class, 'updateStatus'])->name('donations.update-status');
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
     Route::get('/users', [UserManagementController::class, 'index'])->name('users.index');
     Route::post('/users', [UserManagementController::class, 'store'])->name('users.store');

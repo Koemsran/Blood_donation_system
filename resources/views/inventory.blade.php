@@ -10,25 +10,30 @@
                 <p class="inventory-subtitle">Real-time monitoring of blood stock and expiration status.</p>
             </div>
             <div class="inventory-actions">
-                <button class="btn btn-light btn-sm inventory-action-btn">
+                <a href="{{ route('reports.index') }}" class="btn btn-light btn-sm inventory-action-btn">
                     <i class="fas fa-download"></i>
                     Export Data
-                </button>
-                <button class="btn btn-danger btn-sm inventory-action-btn">
+                </a>
+                <button type="button" class="btn btn-danger btn-sm inventory-action-btn" data-bs-toggle="modal" data-bs-target="#createStockModal">
                     <i class="fas fa-plus"></i>
                     Update Stock
                 </button>
             </div>
         </div>
 
+        <form action="{{ route('inventory.index') }}" method="GET" class="inventory-search-form">
+            <i class="fas fa-magnifying-glass"></i>
+            <input type="text" name="search" value="{{ $search }}" placeholder="Search blood type, stock ID, or blood bank" aria-label="Search stock" />
+        </form>
+
         <section class="inventory-stats-grid">
             <article class="inventory-panel inventory-stat-card">
                 <div class="inventory-stat-top">
                     <span class="inventory-icon inventory-icon-blue"><i class="fas fa-boxes-stacked"></i></span>
-                    <span class="inventory-chip inventory-chip-green">+5.2 %</span>
+                    <span class="inventory-chip inventory-chip-green">Live</span>
                 </div>
                 <p class="inventory-stat-label">Total Units Available</p>
-                <h3 class="inventory-stat-value">1,248 <span>units</span></h3>
+                <h3 class="inventory-stat-value">{{ number_format($totalUnits) }} <span>units</span></h3>
             </article>
 
             <article class="inventory-panel inventory-stat-card">
@@ -37,7 +42,7 @@
                     <span class="inventory-chip inventory-chip-red">Critical</span>
                 </div>
                 <p class="inventory-stat-label">Low Stock Alerts</p>
-                <h3 class="inventory-stat-value">4 Types</h3>
+                <h3 class="inventory-stat-value">{{ $lowStockTypes }} Types</h3>
             </article>
 
             <article class="inventory-panel inventory-stat-card">
@@ -46,14 +51,14 @@
                     <span class="inventory-chip inventory-chip-salmon">Action Required</span>
                 </div>
                 <p class="inventory-stat-label">Expiring Soon (48h)</p>
-                <h3 class="inventory-stat-value">12 Units</h3>
+                <h3 class="inventory-stat-value">{{ $expiringSoonUnits }} Units</h3>
             </article>
         </section>
 
         <section class="inventory-panel inventory-stock-panel">
             <header class="inventory-section-head">
                 <h5>Current Stock by Type</h5>
-                <p>Last updated: Today, 10:45 AM</p>
+                <p>Last updated: {{ now()->format('M d, Y h:i A') }}</p>
             </header>
 
             <div class="inventory-table-wrap">
@@ -68,76 +73,71 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>
-                                <div class="inventory-blood-group">
-                                    <span class="inventory-blood-badge">A+</span>
-                                    <div>
-                                        <p class="inventory-blood-name">Type A Positive</p>
+                        @forelse ($stocks as $stock)
+                            @php
+                                $quantity = (int) $stock->quantity;
+                                $statusClass = $quantity < 30 ? 'inventory-status-critical' : ($quantity < 80 ? 'inventory-status-alert' : 'inventory-status-healthy');
+                                $statusLabel = $quantity < 30 ? 'Critical Low' : ($quantity < 80 ? 'Alert' : 'Healthy');
+                                $barColorClass = $quantity < 30 ? 'inventory-bar-red' : ($quantity < 80 ? 'inventory-bar-amber' : '');
+                                $progressWidth = max(4, min(100, (int) round(($quantity / 300) * 100)));
+                            @endphp
+                            <tr>
+                                <td>
+                                    <div class="inventory-blood-group">
+                                        <span class="inventory-blood-badge">{{ strtoupper($stock->blood_type) }}</span>
+                                        <div>
+                                            <p class="inventory-blood-name">{{ $stock->bloodBank?->name ?? 'Unknown Bank' }}</p>
+                                        </div>
                                     </div>
-                                </div>
-                            </td>
-                            <td>
-                                <p class="inventory-units">245 Units</p>
-                                <div class="inventory-progress"><span class="inventory-progress-fill inventory-fill-81"></span></div>
-                            </td>
-                            <td><span class="inventory-status inventory-status-healthy">Healthy</span></td>
-                            <td><span class="inventory-range">Min: 50 | Max: 300</span></td>
-                            <td><a class="inventory-link" href="#">Details</a></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="inventory-blood-group">
-                                    <span class="inventory-blood-badge">O-</span>
-                                    <div>
-                                        <p class="inventory-blood-name">Universal Donor</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <p class="inventory-units">18 Units</p>
-                                <div class="inventory-progress"><span class="inventory-progress-fill inventory-fill-10 inventory-bar-red"></span></div>
-                            </td>
-                            <td><span class="inventory-status inventory-status-critical">Critical Low</span></td>
-                            <td><span class="inventory-range">Min: 80 | Max: 250</span></td>
-                            <td><a class="inventory-link inventory-link-danger" href="#">Reorder</a></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="inventory-blood-group">
-                                    <span class="inventory-blood-badge">B+</span>
-                                    <div>
-                                        <p class="inventory-blood-name">Type B Positive</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <p class="inventory-units">112 Units</p>
-                                <div class="inventory-progress"><span class="inventory-progress-fill inventory-fill-44 inventory-bar-amber"></span></div>
-                            </td>
-                            <td><span class="inventory-status inventory-status-alert">Alert</span></td>
-                            <td><span class="inventory-range">Min: 100 | Max: 250</span></td>
-                            <td><a class="inventory-link" href="#">Details</a></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="inventory-blood-group">
-                                    <span class="inventory-blood-badge">AB-</span>
-                                    <div>
-                                        <p class="inventory-blood-name">Type AB Negative</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <p class="inventory-units">42 Units</p>
-                                <div class="inventory-progress"><span class="inventory-progress-fill inventory-fill-42"></span></div>
-                            </td>
-                            <td><span class="inventory-status inventory-status-healthy">Healthy</span></td>
-                            <td><span class="inventory-range">Min: 30 | Max: 100</span></td>
-                            <td><a class="inventory-link" href="#">Details</a></td>
-                        </tr>
+                                </td>
+                                <td>
+                                    <p class="inventory-units">{{ $quantity }} Units</p>
+                                    <div class="inventory-progress"><span class="inventory-progress-fill {{ $barColorClass }}" data-width="{{ $progressWidth }}"></span></div>
+                                </td>
+                                <td><span class="inventory-status {{ $statusClass }}">{{ $statusLabel }}</span></td>
+                                <td><span class="inventory-range">Min: 50 | Max: 300</span></td>
+                                <td>
+                                    <button
+                                        type="button"
+                                        class="inventory-link inventory-edit-btn"
+                                        data-stock-edit
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#editStockModal"
+                                        data-update-url="{{ route('inventory.update', $stock) }}"
+                                        data-stock-bank-id="{{ $stock->blood_bank_id }}"
+                                        data-stock-blood-type="{{ $stock->blood_type }}"
+                                        data-stock-quantity="{{ $stock->quantity }}"
+                                        data-stock-expiry-date="{{ $stock->expiry_date?->format('Y-m-d') }}">
+                                        Edit
+                                    </button>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5">No inventory records found.</td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
+            </div>
+
+            <div class="inventory-pagination-row">
+                <p>Showing {{ $stocks->firstItem() ?? 0 }} to {{ $stocks->lastItem() ?? 0 }} of {{ $stocks->total() }} stock rows</p>
+                <div class="inventory-pagination">
+                    @if ($stocks->onFirstPage())
+                        <span class="inventory-page-disabled">Previous</span>
+                    @else
+                        <a href="{{ $stocks->previousPageUrl() }}">Previous</a>
+                    @endif
+
+                    <span class="active">{{ $stocks->currentPage() }}</span>
+
+                    @if ($stocks->hasMorePages())
+                        <a href="{{ $stocks->nextPageUrl() }}">Next</a>
+                    @else
+                        <span class="inventory-page-disabled">Next</span>
+                    @endif
+                </div>
             </div>
         </section>
 
@@ -145,34 +145,22 @@
             <article class="inventory-panel">
                 <header class="inventory-bottom-head">
                     <h5>Recent Logins / Transactions</h5>
-                    <a href="#">View All</a>
+                    <a href="{{ route('inventory.index') }}">View All</a>
                 </header>
 
                 <div class="inventory-log-list">
-                    <div class="inventory-log-item">
-                        <span class="inventory-log-icon inventory-log-green">+</span>
-                        <div>
-                            <p class="inventory-log-title">Stock In: A+ (12 units)</p>
-                            <p class="inventory-log-meta">Reference INV-2026-1 | 2 hours ago</p>
+                    @forelse ($recentTransactions as $log)
+                        <div class="inventory-log-item">
+                            <span class="inventory-log-icon inventory-log-blue"><i class="fas fa-clipboard-check"></i></span>
+                            <div>
+                                <p class="inventory-log-title">Stock update: {{ strtoupper($log->blood_type) }} ({{ $log->quantity }} units)</p>
+                                <p class="inventory-log-meta">Ref INV-{{ str_pad((string) $log->id, 4, '0', STR_PAD_LEFT) }} | {{ $log->updated_at?->diffForHumans() }}</p>
+                            </div>
+                            <span class="inventory-log-user">{{ $log->bloodBank?->name ?? 'Unknown' }}</span>
                         </div>
-                        <span class="inventory-log-user">Admin-12</span>
-                    </div>
-                    <div class="inventory-log-item">
-                        <span class="inventory-log-icon inventory-log-red">-</span>
-                        <div>
-                            <p class="inventory-log-title">Dispatched: O- (5 units)</p>
-                            <p class="inventory-log-meta">General Hospital | 5 hours ago</p>
-                        </div>
-                        <span class="inventory-log-user">Admin-04</span>
-                    </div>
-                    <div class="inventory-log-item">
-                        <span class="inventory-log-icon inventory-log-blue"><i class="fas fa-clipboard-check"></i></span>
-                        <div>
-                            <p class="inventory-log-title">Audit Check Complete</p>
-                            <p class="inventory-log-meta">Main Cold Room 1 | Yesterday</p>
-                        </div>
-                        <span class="inventory-log-user">Supervisor</span>
-                    </div>
+                    @empty
+                        <p>No recent inventory transactions.</p>
+                    @endforelse
                 </div>
             </article>
 
@@ -183,26 +171,28 @@
                 </header>
 
                 <div class="inventory-alert-list">
-                    <div class="inventory-alert-item">
-                        <span class="inventory-blood-badge">A-</span>
-                        <div>
-                            <p class="inventory-alert-title">4 units expiring in 24h</p>
-                            <p class="inventory-alert-meta">Batch ID: BHT-090 AXL. Action: immediate usage or relocation.</p>
+                    @forelse ($expirationAlerts as $alert)
+                        @php
+                            $isCritical = $alert->expiry_date?->lte(now()->addDays(2));
+                        @endphp
+                        <div class="inventory-alert-item">
+                            <span class="inventory-blood-badge">{{ strtoupper($alert->blood_type) }}</span>
+                            <div>
+                                <p class="inventory-alert-title">{{ $alert->quantity }} units expiring {{ $alert->expiry_date?->diffForHumans() }}</p>
+                                <p class="inventory-alert-meta">Batch ID: INV-{{ str_pad((string) $alert->id, 4, '0', STR_PAD_LEFT) }}. Bank: {{ $alert->bloodBank?->name ?? 'Unknown' }}.</p>
+                            </div>
+                            <span class="inventory-alert-level {{ $isCritical ? 'inventory-alert-critical' : 'inventory-alert-warning' }}">{{ $isCritical ? 'Critical' : 'Warning' }}</span>
                         </div>
-                        <span class="inventory-alert-level inventory-alert-critical">Critical</span>
-                    </div>
-                    <div class="inventory-alert-item">
-                        <span class="inventory-blood-badge">B+</span>
-                        <div>
-                            <p class="inventory-alert-title">8 units expiring in 5 days</p>
-                            <p class="inventory-alert-meta">Batch ID: BHT-882 PQA. Priority for scheduled surgeries.</p>
-                        </div>
-                        <span class="inventory-alert-level inventory-alert-warning">Warning</span>
-                    </div>
+                    @empty
+                        <p>No expiration alerts currently.</p>
+                    @endforelse
                 </div>
 
-                <button class="btn inventory-audit-btn">Run Waste Audit Report</button>
+                <a href="{{ route('reports.index', ['months' => 3]) }}" class="btn inventory-audit-btn">Run Waste Audit Report</a>
             </article>
         </section>
     </div>
+
+    @include('inventory.modals.create-stock-modal')
+    @include('inventory.modals.edit-stock-modal')
 @endsection

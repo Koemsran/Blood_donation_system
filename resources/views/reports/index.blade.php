@@ -3,22 +3,29 @@
 @section('title', 'Reports & Analytics')
 
 @section('page')
+    @php
+        $trendTotalUnits = (int) $donationTrends->sum('total_units');
+        $maxRequested = max(1, (int) ($requestVsFulfillment->max('requested_units') ?? 1));
+    @endphp
+
     <div class="reports-page">
         <div class="reports-header">
             <div>
                 <h1 class="reports-title">Reports &amp; Analytics</h1>
                 <p class="reports-subtitle">Comprehensive insights into blood donation cycles and hospital fulfillment.</p>
             </div>
-            <div class="reports-actions">
-                <button class="btn btn-light btn-sm reports-action-btn">
-                    <i class="fas fa-calendar"></i>
-                    Last 6 Months
-                </button>
-                <button class="btn btn-danger btn-sm reports-action-btn">
+            <form action="{{ route('reports.index') }}" method="GET" class="reports-actions">
+                <select class="form-select form-select-sm reports-action-btn" name="months" aria-label="Months Filter">
+                    <option value="3" {{ $months === 3 ? 'selected' : '' }}>Last 3 Months</option>
+                    <option value="6" {{ $months === 6 ? 'selected' : '' }}>Last 6 Months</option>
+                    <option value="12" {{ $months === 12 ? 'selected' : '' }}>Last 12 Months</option>
+                </select>
+                <button type="submit" class="btn btn-light btn-sm reports-action-btn">Apply</button>
+                <a href="{{ route('reports.index') }}" class="btn btn-danger btn-sm reports-action-btn">
                     <i class="fas fa-download"></i>
-                    Export PDF
-                </button>
-            </div>
+                    Refresh
+                </a>
+            </form>
         </div>
 
         <section class="reports-kpis-grid">
@@ -27,8 +34,8 @@
                     <p>Total Donations</p>
                     <i class="fas fa-droplet"></i>
                 </div>
-                <h3>1,284</h3>
-                <span class="reports-kpi-note up">~ +12% vs last period</span>
+                <h3>{{ number_format($totalDonations) }}</h3>
+                <span class="reports-kpi-note up">For selected period</span>
             </article>
 
             <article class="reports-kpi-card">
@@ -36,8 +43,8 @@
                     <p>Fulfillment Rate</p>
                     <i class="fas fa-circle-check"></i>
                 </div>
-                <h3>87.4%</h3>
-                <span class="reports-kpi-note up">~ +5.2% vs last month</span>
+                <h3>{{ number_format($fulfillmentRate, 1) }}%</h3>
+                <span class="reports-kpi-note up">Approved/completed requests</span>
             </article>
 
             <article class="reports-kpi-card">
@@ -45,8 +52,8 @@
                     <p>Avg. Fulfillment Time</p>
                     <i class="fas fa-clock"></i>
                 </div>
-                <h3>4.2 Hours</h3>
-                <span class="reports-kpi-note down">~ -0.8h faster</span>
+                <h3>{{ number_format($avgFulfillmentHours, 1) }} Hours</h3>
+                <span class="reports-kpi-note down">Based on request status updates</span>
             </article>
 
             <article class="reports-kpi-card">
@@ -54,27 +61,41 @@
                     <p>Critical Stock Shortage</p>
                     <i class="fas fa-triangle-exclamation"></i>
                 </div>
-                <h3>2 Groups</h3>
-                <span class="reports-kpi-note muted">O-, AB- currently low</span>
+                <h3>{{ $criticalStockShortage }} Groups</h3>
+                <span class="reports-kpi-note muted">Types below 50 units</span>
             </article>
         </section>
 
         <section class="reports-charts-grid">
             <article class="reports-chart-card">
                 <div class="reports-chart-head">
-                    <h5>Donation Trends (6 Months)</h5>
+                    <h5>Donation Trends ({{ $months }} Months)</h5>
                     <i class="fas fa-ellipsis-vertical"></i>
                 </div>
-                <h4>7,420 <span>Total Units</span></h4>
-                <p class="reports-chart-note">~ +15.4% increase</p>
+                <h4>{{ number_format($trendTotalUnits) }} <span>Total Units</span></h4>
+                <p class="reports-chart-note">Aggregated donation volume</p>
 
-                <div class="reports-line-graph" aria-label="Line chart illustration">
-                    <svg viewBox="0 0 600 220" preserveAspectRatio="none">
-                        <path d="M0,170 C35,165 35,95 70,90 C110,84 110,155 145,152 C185,148 185,92 220,105 C255,118 255,170 290,160 C320,151 330,122 360,121 C390,120 403,169 430,176 C460,184 470,202 500,206 C535,210 545,98 575,96 C590,95 597,145 600,130" />
-                    </svg>
-                </div>
-                <div class="reports-months-row">
-                    <span>JAN</span><span>FEB</span><span>MAR</span><span>APR</span><span>MAY</span><span>JUN</span>
+                <div class="reports-table-wrap">
+                    <table class="reports-table">
+                        <thead>
+                            <tr>
+                                <th>Month</th>
+                                <th>Units</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($donationTrends as $trend)
+                                <tr>
+                                    <td>{{ \Carbon\Carbon::createFromFormat('Y-m', $trend->month_key)->format('M Y') }}</td>
+                                    <td>{{ number_format($trend->total_units) }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="2">No trend data for this period.</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
                 </div>
             </article>
 
@@ -83,40 +104,23 @@
                     <h5>Requests vs. Fulfillment</h5>
                     <i class="fas fa-ellipsis-vertical"></i>
                 </div>
-                <h4>2,100 <span>Units Requested</span></h4>
-                <p class="reports-chart-note">~ 8.2% fulfillment growth</p>
+                <h4>{{ number_format((int) $requestVsFulfillment->sum('requested_units')) }} <span>Units Requested</span></h4>
+                <p class="reports-chart-note">Compared to fulfilled units</p>
 
                 <div class="reports-bars-grid" aria-label="Bar chart illustration">
-                    <div class="reports-bar-group">
-                        <span class="reports-bar requested h80"></span>
-                        <span class="reports-bar fulfilled h74"></span>
-                        <p>O+</p>
-                    </div>
-                    <div class="reports-bar-group">
-                        <span class="reports-bar requested h72"></span>
-                        <span class="reports-bar fulfilled h66"></span>
-                        <p>A+</p>
-                    </div>
-                    <div class="reports-bar-group">
-                        <span class="reports-bar requested h64"></span>
-                        <span class="reports-bar fulfilled h58"></span>
-                        <p>B+</p>
-                    </div>
-                    <div class="reports-bar-group">
-                        <span class="reports-bar requested h48"></span>
-                        <span class="reports-bar fulfilled h44"></span>
-                        <p>AB+</p>
-                    </div>
-                    <div class="reports-bar-group">
-                        <span class="reports-bar requested h54"></span>
-                        <span class="reports-bar fulfilled h48"></span>
-                        <p>O-</p>
-                    </div>
-                    <div class="reports-bar-group">
-                        <span class="reports-bar requested h40"></span>
-                        <span class="reports-bar fulfilled h35"></span>
-                        <p>A-</p>
-                    </div>
+                    @forelse ($requestVsFulfillment as $item)
+                        @php
+                            $requestedHeight = max(5, (int) round(($item->requested_units / $maxRequested) * 100));
+                            $fulfilledHeight = max(5, (int) round(($item->fulfilled_units / $maxRequested) * 100));
+                        @endphp
+                        <div class="reports-bar-group">
+                            <span class="reports-bar requested" data-height="{{ $requestedHeight }}"></span>
+                            <span class="reports-bar fulfilled" data-height="{{ $fulfilledHeight }}"></span>
+                            <p>{{ strtoupper($item->blood_type) }}</p>
+                        </div>
+                    @empty
+                        <p>No request analytics available.</p>
+                    @endforelse
                 </div>
 
                 <div class="reports-legend">
@@ -145,38 +149,24 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td><strong>#REQ-2940</strong></td>
-                            <td>City General Hospital</td>
-                            <td class="blood">A+</td>
-                            <td>12 Units</td>
-                            <td>1h 45m</td>
-                            <td><span class="status fulfilled">Fulfilled</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>#REQ-2938</strong></td>
-                            <td>St. Mary's Pediatric</td>
-                            <td class="blood">O-</td>
-                            <td>4 Units</td>
-                            <td>42m</td>
-                            <td><span class="status fulfilled">Fulfilled</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>#REQ-2935</strong></td>
-                            <td>Mercy Heart Institute</td>
-                            <td class="blood">B+</td>
-                            <td>20 Units</td>
-                            <td>3h 10m</td>
-                            <td><span class="status pending">Pending</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>#REQ-2931</strong></td>
-                            <td>Lakeside Trauma</td>
-                            <td class="blood">AB+</td>
-                            <td>8 Units</td>
-                            <td>5h 20m</td>
-                            <td><span class="status fulfilled">Fulfilled</span></td>
-                        </tr>
+                        @forelse ($recentLogs as $log)
+                            @php
+                                $isFulfilled = in_array($log->status, ['approved', 'completed'], true);
+                                $responseHours = $log->request_date ? max(0, (int) $log->request_date->diffInHours($log->updated_at)) : null;
+                            @endphp
+                            <tr>
+                                <td><strong>#REQ-{{ str_pad((string) $log->id, 4, '0', STR_PAD_LEFT) }}</strong></td>
+                                <td>{{ $log->hospital?->name ?? 'Unknown Institution' }}</td>
+                                <td class="blood">{{ strtoupper($log->blood_type) }}</td>
+                                <td>{{ $log->quantity }} Units</td>
+                                <td>{{ $responseHours !== null ? $responseHours . 'h' : '-' }}</td>
+                                <td><span class="status {{ $isFulfilled ? 'fulfilled' : 'pending' }}">{{ ucfirst($log->status) }}</span></td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="6">No recent distribution logs found.</td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
