@@ -150,6 +150,12 @@
     color: #334155;
 }
 
+.staff-clear-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
 .staff-table-wrap {
     overflow-x: auto;
 }
@@ -219,6 +225,16 @@
     letter-spacing: 0.04em;
 }
 
+.staff-bank-chip {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 6px;
+    background: #f8fafc;
+    color: #475569;
+    font-size: 0.74rem;
+    font-weight: 700;
+}
+
 .staff-status {
     display: inline-flex;
     align-items: center;
@@ -242,6 +258,19 @@
 .staff-actions {
     display: flex;
     gap: 10px;
+}
+
+.staff-actions form {
+    margin: 0;
+}
+
+.staff-icon-btn {
+    border: none;
+    background: transparent;
+    color: #64748b;
+    text-decoration: none;
+    font-size: 0.85rem;
+    padding: 0;
 }
 
 .staff-actions a {
@@ -288,6 +317,18 @@
     color: #fff;
     border-color: #dc2626;
     font-weight: 700;
+}
+
+.staff-page-disabled {
+    min-width: 28px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    color: #cbd5e1;
+    font-size: 0.82rem;
 }
 
 @media (max-width: 1024px) {

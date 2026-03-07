@@ -2,7 +2,7 @@
 
 @section('title', 'Donor Details')
 
-@section('content')
+@section('page')
     <div class="row mb-4">
         <div class="col-md-8">
             <h1 class="display-6">Donor Details</h1>

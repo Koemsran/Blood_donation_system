@@ -36,7 +36,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
     Route::get('/staff', [StaffController::class, 'index'])->name('staff.index');
+    Route::post('/staff', [StaffController::class, 'store'])->name('staff.store');
+    Route::put('/staff/{staff}', [StaffController::class, 'update'])->name('staff.update');
+    Route::delete('/staff/{staff}', [StaffController::class, 'destroy'])->name('staff.destroy');
     Route::get('/hospitals', [HospitalController::class, 'index'])->name('hospitals.index');
+    Route::post('/hospitals', [HospitalController::class, 'store'])->name('hospitals.store');
+    Route::put('/hospitals/{hospital}', [HospitalController::class, 'update'])->name('hospitals.update');
+    Route::delete('/hospitals/{hospital}', [HospitalController::class, 'destroy'])->name('hospitals.destroy');
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
     Route::get('/users', [UserManagementController::class, 'index'])->name('users.index');
     Route::post('/users', [UserManagementController::class, 'store'])->name('users.store');

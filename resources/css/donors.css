@@ -296,10 +296,20 @@
     gap: 10px;
 }
 
+.donor-actions form {
+    margin: 0;
+}
+
 .donor-action-link {
     color: #64748b;
     font-size: 0.85rem;
     text-decoration: none;
+}
+
+.donor-icon-btn {
+    border: none;
+    background: transparent;
+    padding: 0;
 }
 
 .donor-table-footer {
@@ -340,6 +350,18 @@
     color: #fff;
     border-color: #dc2626;
     font-weight: 700;
+}
+
+.donor-page-disabled {
+    min-width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    border: 1px solid #e2e8f0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #cbd5e1;
+    font-size: 0.82rem;
 }
 
 .donor-page-dots {

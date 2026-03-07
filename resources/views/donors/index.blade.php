@@ -3,14 +3,6 @@
 @section('title', 'Donors')
 
 @section('page')
-    @php
-        $displayDonors = $donors->take(5);
-        $totalDonors = max($donors->count(), 2543);
-        $eligibleToday = $donors->filter(function ($donor) {
-            return is_null($donor->last_donation_date) || $donor->last_donation_date->lt(now()->subMonths(3));
-        })->count();
-    @endphp
-
     <div class="donors-page">
         <div class="donors-header">
             <div>
@@ -22,10 +14,10 @@
                     <i class="fas fa-download"></i>
                     Export List
                 </button>
-                <a href="{{ route('donors.create') }}" class="btn btn-danger btn-sm donors-action-btn">
+                <button type="button" class="btn btn-danger btn-sm donors-action-btn" data-bs-toggle="modal" data-bs-target="#createDonorModal">
                     <i class="fas fa-user-plus"></i>
                     Add New Donor
-                </a>
+                </button>
             </div>
         </div>
 
@@ -36,7 +28,7 @@
                     <span class="donor-stat-icon donor-icon-red"><i class="fas fa-users"></i></span>
                 </div>
                 <h3 class="donor-stat-value">{{ number_format($totalDonors) }}</h3>
-                <p class="donor-stat-note donor-note-green">+ ~12% this month</p>
+                <p class="donor-stat-note donor-note-green">All registered</p>
             </article>
 
             <article class="donor-stat-card">
@@ -44,8 +36,8 @@
                     <p class="donor-stat-label">Eligible Today</p>
                     <span class="donor-stat-icon donor-icon-green"><i class="fas fa-circle-check"></i></span>
                 </div>
-                <h3 class="donor-stat-value">{{ $eligibleToday ?: 892 }}</h3>
-                <p class="donor-stat-note">74.4% of database</p>
+                <h3 class="donor-stat-value">{{ $eligibleToday }}</h3>
+                <p class="donor-stat-note">Ready to donate</p>
             </article>
 
             <article class="donor-stat-card">
@@ -53,7 +45,7 @@
                     <p class="donor-stat-label">Pending Screening</p>
                     <span class="donor-stat-icon donor-icon-amber"><i class="fas fa-hourglass-half"></i></span>
                 </div>
-                <h3 class="donor-stat-value">45</h3>
+                <h3 class="donor-stat-value">{{ $pendingScreening }}</h3>
                 <p class="donor-stat-note donor-note-red">Requires attention</p>
             </article>
 
@@ -62,26 +54,31 @@
                     <p class="donor-stat-label">Donations this Week</p>
                     <span class="donor-stat-icon donor-icon-blue"><i class="fas fa-hand-holding-heart"></i></span>
                 </div>
-                <h3 class="donor-stat-value">128</h3>
+                <h3 class="donor-stat-value">{{ $weeklyDonations }}</h3>
                 <p class="donor-stat-note donor-note-blue">On target</p>
             </article>
         </section>
 
         <section class="donor-table-card">
-            <div class="donor-table-topbar">
+            <form action="{{ route('donors.index') }}" method="GET" class="donor-table-topbar donor-filter-form">
                 <div class="donor-search-box">
                     <i class="fas fa-magnifying-glass donor-search-icon"></i>
-                    <input type="text" class="donor-search-input" placeholder="Search donors by name, blood type, ID or city..." />
+                    <input type="text" name="search" value="{{ $search }}" class="donor-search-input" placeholder="Search donors by name, blood type, ID or contact..." />
                 </div>
 
-                <select class="donor-filter-select" aria-label="Blood Type Filter">
-                    <option>All Blood Types</option>
+                <select class="donor-filter-select" name="blood_type" aria-label="Blood Type Filter">
+                    <option value="">All Blood Types</option>
+                    @foreach ($bloodTypes as $bloodTypeOption)
+                        <option value="{{ $bloodTypeOption }}" {{ $bloodType === $bloodTypeOption ? 'selected' : '' }}>{{ $bloodTypeOption }}</option>
+                    @endforeach
                 </select>
 
-                <select class="donor-filter-select" aria-label="Status Filter">
-                    <option>All Status</option>
+                <select class="donor-filter-select" name="status" aria-label="Status Filter">
+                    <option value="">All Status</option>
+                    <option value="eligible" {{ $status === 'eligible' ? 'selected' : '' }}>Eligible</option>
+                    <option value="deferred" {{ $status === 'deferred' ? 'selected' : '' }}>Deferred</option>
                 </select>
-            </div>
+            </form>
 
             <div class="donor-table-wrap">
                 <table class="donor-table">
@@ -96,7 +93,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($displayDonors as $donor)
+                        @forelse ($donors as $donor)
                             @php
                                 $lastDonation = $donor->last_donation_date;
                                 $isDeferred = $lastDonation && $lastDonation->gt(now()->subMonths(3));
@@ -134,12 +131,31 @@
                                 </td>
                                 <td>
                                     <div class="donor-actions">
-                                        <a class="donor-action-link" href="{{ route('donors.edit', $donor) }}" title="Edit">
+                                        <button
+                                            type="button"
+                                            class="donor-action-link donor-icon-btn"
+                                            data-donor-edit
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#editDonorModal"
+                                            data-update-url="{{ route('donors.update', $donor) }}"
+                                            data-donor-name="{{ $donor->name }}"
+                                            data-donor-age="{{ $donor->age }}"
+                                            data-donor-blood-type="{{ $donor->blood_type }}"
+                                            data-donor-contact="{{ $donor->contact }}"
+                                            data-donor-last-donation="{{ $donor->last_donation_date?->format('Y-m-d') ?? '' }}"
+                                            title="Edit">
                                             <i class="fas fa-pen"></i>
-                                        </a>
+                                        </button>
                                         <a class="donor-action-link" href="{{ route('donors.show', $donor) }}" title="View">
                                             <i class="fas fa-eye"></i>
                                         </a>
+                                        <form action="{{ route('donors.destroy', $donor) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this donor?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="donor-action-link donor-icon-btn" title="Delete">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
                                     </div>
                                 </td>
                             </tr>
@@ -153,17 +169,26 @@
             </div>
 
             <div class="donor-table-footer">
-                <p class="donor-footer-info">Showing 1 to {{ $displayDonors->count() }} of {{ number_format($totalDonors) }} donors</p>
+                <p class="donor-footer-info">Showing {{ $donors->firstItem() ?? 0 }} to {{ $donors->lastItem() ?? 0 }} of {{ number_format($donors->total()) }} donors</p>
                 <div class="donor-pagination">
-                    <a href="#" class="donor-page-btn"><i class="fas fa-chevron-left"></i></a>
-                    <a href="#" class="donor-page-btn active">1</a>
-                    <a href="#" class="donor-page-btn">2</a>
-                    <a href="#" class="donor-page-btn">3</a>
-                    <span class="donor-page-dots">...</span>
-                    <a href="#" class="donor-page-btn">50</a>
-                    <a href="#" class="donor-page-btn"><i class="fas fa-chevron-right"></i></a>
+                    @if ($donors->onFirstPage())
+                        <span class="donor-page-disabled"><i class="fas fa-chevron-left"></i></span>
+                    @else
+                        <a href="{{ $donors->previousPageUrl() }}" class="donor-page-btn"><i class="fas fa-chevron-left"></i></a>
+                    @endif
+
+                    <span class="donor-page-btn active">{{ $donors->currentPage() }}</span>
+
+                    @if ($donors->hasMorePages())
+                        <a href="{{ $donors->nextPageUrl() }}" class="donor-page-btn"><i class="fas fa-chevron-right"></i></a>
+                    @else
+                        <span class="donor-page-disabled"><i class="fas fa-chevron-right"></i></span>
+                    @endif
                 </div>
             </div>
         </section>
     </div>
+
+    @include('donors.modals.create-donor-modal')
+    @include('donors.modals.edit-donor-modal')
 @endsection

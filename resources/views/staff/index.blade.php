@@ -4,43 +4,16 @@
 
 @section('page')
     @php
-        $sessionCount = max((int) ceil($staffMembers->count() / 2), 12);
-        $pendingInvites = 5;
-
-        $seedRows = collect([
-            ['name' => 'Sarah Connor', 'role' => 'SUPER ADMIN', 'contact' => 's.connor@bloodsys.com', 'status' => 'Active', 'last_login' => '2 mins ago', 'tag' => 'sc'],
-            ['name' => 'Mark Wilson', 'role' => 'LAB MANAGER', 'contact' => 'm.wilson@bloodsys.com', 'status' => 'Active', 'last_login' => '1 hour ago', 'tag' => 'mw'],
-            ['name' => 'Jane Doe', 'role' => 'SUPPORT STAFF', 'contact' => 'j.doe@bloodsys.com', 'status' => 'Inactive', 'last_login' => '3 days ago', 'tag' => 'jd'],
-            ['name' => 'Robert King', 'role' => 'LAB MANAGER', 'contact' => 'r.king@bloodsys.com', 'status' => 'Active', 'last_login' => '12 mins ago', 'tag' => 'rk'],
-        ]);
-
-        $rows = $staffMembers->isNotEmpty()
-            ? $staffMembers->values()->map(function ($member, $index) {
-                $status = $index === 2 ? 'Inactive' : 'Active';
-                $lastLogins = ['2 mins ago', '1 hour ago', '3 days ago', '12 mins ago'];
-                $tag = strtolower(substr($member->name, 0, 1) . substr(strrchr(' ' . $member->name, ' '), 1, 1));
-
-                return [
-                    'name' => $member->name,
-                    'role' => strtoupper($member->role),
-                    'contact' => $member->contact,
-                    'status' => $status,
-                    'last_login' => $lastLogins[$index] ?? 'Recently',
-                    'tag' => $tag,
-                ];
-            })
-            : $seedRows;
-
-        $totalStaff = max($staffMembers->count(), 42);
+        $sessionCount = max((int) ceil($activeStaff / 2), 1);
     @endphp
 
     <div class="staff-page">
         <div class="staff-header">
             <h1 class="staff-title">Staff Management</h1>
-            <a href="#" class="btn btn-danger btn-sm staff-add-btn">
+            <button type="button" class="btn btn-danger btn-sm staff-add-btn" data-bs-toggle="modal" data-bs-target="#createStaffModal">
                 <i class="fas fa-plus"></i>
                 Add New Staff
-            </a>
+            </button>
         </div>
 
         <section class="staff-metrics-grid">
@@ -48,7 +21,7 @@
                 <p class="staff-metric-label">Total Staff</p>
                 <div class="staff-metric-row">
                     <h3 class="staff-metric-value">{{ $totalStaff }}</h3>
-                    <span class="staff-metric-pill">+4 this month</span>
+                    <span class="staff-metric-pill">Registered</span>
                 </div>
             </article>
 
@@ -63,88 +36,132 @@
             </article>
 
             <article class="staff-metric-card">
-                <p class="staff-metric-label">Pending Invitations</p>
+                <p class="staff-metric-label">Pending Assignment</p>
                 <div class="staff-metric-row">
-                    <h3 class="staff-metric-value">{{ $pendingInvites }}</h3>
-                    <a href="#" class="staff-view-link">View All</a>
+                    <h3 class="staff-metric-value">{{ $pendingAssignments }}</h3>
+                    <span class="staff-view-link">No assigned bank</span>
                 </div>
             </article>
         </section>
 
         <section class="staff-table-card">
-            <div class="staff-table-toolbar">
+            <form action="{{ route('staff.index') }}" method="GET" class="staff-table-toolbar staff-filter-form">
                 <div class="staff-search-wrap">
                     <i class="fas fa-magnifying-glass"></i>
-                    <input type="text" placeholder="Search by name, email or role" aria-label="Search staff" />
+                    <input type="text" name="search" value="{{ $search }}" placeholder="Search by name, contact or role" aria-label="Search staff" />
                 </div>
 
                 <div class="staff-toolbar-actions">
-                    <button class="btn btn-light btn-sm staff-toolbar-btn">
+                    <select class="form-select form-select-sm staff-toolbar-btn" name="role" aria-label="Role Filter">
+                        <option value="">All Roles</option>
+                        @foreach ($roleOptions as $roleOption)
+                            <option value="{{ $roleOption }}" {{ $role === $roleOption ? 'selected' : '' }}>{{ strtoupper($roleOption) }}</option>
+                        @endforeach
+                    </select>
+                    <a href="{{ route('staff.index') }}" class="btn btn-light btn-sm staff-toolbar-btn staff-clear-btn">
                         <i class="fas fa-filter"></i>
-                        All Roles
-                    </button>
-                    <button class="btn btn-light btn-sm staff-toolbar-btn">
-                        <i class="fas fa-sort"></i>
-                        Sort
-                    </button>
+                        Clear
+                    </a>
                 </div>
-            </div>
+            </form>
 
             <div class="staff-table-wrap">
                 <table class="staff-table">
                     <thead>
                         <tr>
                             <th>Name</th>
-                            <th>Email</th>
+                            <th>Contact</th>
                             <th>Role</th>
+                            <th>Assigned Bank</th>
                             <th>Status</th>
-                            <th>Last Login</th>
+                            <th>Updated</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($rows as $row)
+                        @forelse ($staffMembers as $member)
+                            @php
+                                $isActive = !is_null($member->assigned_bank_id);
+                                $tag = strtoupper(substr($member->name, 0, 1) . substr(strrchr(' ' . $member->name, ' '), 1, 1));
+                            @endphp
                             <tr>
                                 <td>
                                     <div class="staff-user-cell">
-                                        <span class="staff-avatar">{{ strtoupper($row['tag']) }}</span>
-                                        <span class="staff-user-name">{{ $row['name'] }}</span>
+                                        <span class="staff-avatar">{{ $tag }}</span>
+                                        <span class="staff-user-name">{{ $member->name }}</span>
                                     </div>
                                 </td>
-                                <td class="staff-email">{{ $row['contact'] }}</td>
+                                <td class="staff-email">{{ $member->contact }}</td>
                                 <td>
-                                    <span class="staff-role-chip">{{ $row['role'] }}</span>
+                                    <span class="staff-role-chip">{{ strtoupper($member->role) }}</span>
                                 </td>
                                 <td>
-                                    <span class="staff-status {{ $row['status'] === 'Active' ? 'is-active' : 'is-inactive' }}">
+                                    <span class="staff-bank-chip">{{ $member->assignedBank?->name ?? 'Not Assigned' }}</span>
+                                </td>
+                                <td>
+                                    <span class="staff-status {{ $isActive ? 'is-active' : 'is-inactive' }}">
                                         <i class="fas fa-circle"></i>
-                                        {{ $row['status'] }}
+                                        {{ $isActive ? 'Active' : 'Inactive' }}
                                     </span>
                                 </td>
-                                <td class="staff-login">{{ $row['last_login'] }}</td>
+                                <td class="staff-login">{{ $member->updated_at?->diffForHumans() ?? '-' }}</td>
                                 <td>
                                     <div class="staff-actions">
-                                        <a href="#" title="Edit"><i class="fas fa-pen"></i></a>
-                                        <a href="#" title="History"><i class="fas fa-history"></i></a>
-                                        <a href="#" title="Disable"><i class="fas fa-user-slash"></i></a>
+                                        <button
+                                            type="button"
+                                            class="staff-icon-btn"
+                                            data-staff-edit
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#editStaffModal"
+                                            data-update-url="{{ route('staff.update', $member) }}"
+                                            data-staff-name="{{ $member->name }}"
+                                            data-staff-contact="{{ $member->contact }}"
+                                            data-staff-role="{{ $member->role }}"
+                                            data-staff-assigned-bank="{{ $member->assigned_bank_id ?? '' }}"
+                                            title="Edit">
+                                            <i class="fas fa-pen"></i>
+                                        </button>
+
+                                        <form action="{{ route('staff.destroy', $member) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this staff member?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="staff-icon-btn" title="Delete">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
                                     </div>
                                 </td>
                             </tr>
-                        @endforeach
+                        @empty
+                            <tr>
+                                <td colspan="7">No staff records found.</td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
 
             <div class="staff-footer">
-                <p>Showing 1 to {{ $rows->count() }} of <strong>{{ $totalStaff }}</strong> staff members</p>
+                <p>Showing {{ $staffMembers->firstItem() ?? 0 }} to {{ $staffMembers->lastItem() ?? 0 }} of <strong>{{ $staffMembers->total() }}</strong> staff members</p>
                 <div class="staff-pagination">
-                    <a href="#"><i class="fas fa-chevron-left"></i></a>
-                    <a href="#" class="active">1</a>
-                    <a href="#">2</a>
-                    <a href="#">3</a>
-                    <a href="#"><i class="fas fa-chevron-right"></i></a>
+                    @if ($staffMembers->onFirstPage())
+                        <span class="staff-page-disabled"><i class="fas fa-chevron-left"></i></span>
+                    @else
+                        <a href="{{ $staffMembers->previousPageUrl() }}"><i class="fas fa-chevron-left"></i></a>
+                    @endif
+
+                    <span class="active">{{ $staffMembers->currentPage() }}</span>
+
+                    @if ($staffMembers->hasMorePages())
+                        <a href="{{ $staffMembers->nextPageUrl() }}"><i class="fas fa-chevron-right"></i></a>
+                    @else
+                        <span class="staff-page-disabled"><i class="fas fa-chevron-right"></i></span>
+                    @endif
                 </div>
             </div>
         </section>
     </div>
+
+    @include('staff.modals.create-staff-modal')
+    @include('staff.modals.edit-staff-modal')
 @endsection
