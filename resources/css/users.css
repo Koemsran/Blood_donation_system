@@ -38,7 +38,7 @@
     border-radius: 12px;
     padding: 14px;
     display: grid;
-    grid-template-columns: 1fr auto auto;
+    grid-template-columns: minmax(280px, 1fr) auto auto;
     gap: 10px;
     margin-bottom: 18px;
     box-shadow: 0 2px 10px rgba(15, 23, 42, 0.06);
@@ -168,6 +168,11 @@
     color: #2563eb;
 }
 
+.users-role-chip.user {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
 .users-role-chip.hospital-admin {
     background: #fef3c7;
     color: #b45309;
@@ -206,6 +211,30 @@
 .users-actions {
     display: flex;
     gap: 12px;
+}
+
+.users-actions form {
+    margin: 0;
+}
+
+.users-icon-btn {
+    border: none;
+    background: transparent;
+    color: #64748b;
+    font-size: 0.95rem;
+    padding: 0;
+}
+
+.users-page-disabled {
+    min-width: 30px;
+    height: 30px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #cbd5e1;
+    font-size: 0.85rem;
 }
 
 .users-actions a {

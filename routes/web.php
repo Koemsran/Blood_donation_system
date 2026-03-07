@@ -39,6 +39,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/hospitals', [HospitalController::class, 'index'])->name('hospitals.index');
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
     Route::get('/users', [UserManagementController::class, 'index'])->name('users.index');
+    Route::post('/users', [UserManagementController::class, 'store'])->name('users.store');
+    Route::put('/users/{user}', [UserManagementController::class, 'update'])->name('users.update');
+    Route::delete('/users/{user}', [UserManagementController::class, 'destroy'])->name('users.destroy');
 
     // Donors Routes
     Route::resource('donors', DonorController::class);
