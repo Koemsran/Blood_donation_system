@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\BloodType;
 use App\Models\BloodBank;
 use App\Models\BloodStock;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class InventoryController extends Controller
 {
@@ -56,7 +58,7 @@ class InventoryController extends Controller
 
         $bloodBanks = BloodBank::query()->orderBy('name')->get(['id', 'name']);
 
-        return view('inventory', [
+        return view('inventory.index', [
             'stocks' => $stocks,
             'search' => $search,
             'totalUnits' => $totalUnits,
@@ -72,7 +74,7 @@ class InventoryController extends Controller
     {
         $validated = $request->validate([
             'blood_bank_id' => 'required|exists:blood_banks,id',
-            'blood_type' => 'required|string|max:10',
+            'blood_type' => ['required', Rule::in(BloodType::values())],
             'quantity' => 'required|integer|min:1',
             'expiry_date' => 'nullable|date',
         ]);
@@ -86,7 +88,7 @@ class InventoryController extends Controller
     {
         $validated = $request->validate([
             'blood_bank_id' => 'required|exists:blood_banks,id',
-            'blood_type' => 'required|string|max:10',
+            'blood_type' => ['required', Rule::in(BloodType::values())],
             'quantity' => 'required|integer|min:1',
             'expiry_date' => 'nullable|date',
         ]);

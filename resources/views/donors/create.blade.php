@@ -42,15 +42,7 @@
                                 <label for="blood_type" class="form-label">Blood Type</label>
                                 <select class="form-select @error('blood_type') is-invalid @enderror"
                                     id="blood_type" name="blood_type" required>
-                                    <option value="">Select Blood Type</option>
-                                    <option value="O+" {{ old('blood_type') == 'O+' ? 'selected' : '' }}>O+</option>
-                                    <option value="O-" {{ old('blood_type') == 'O-' ? 'selected' : '' }}>O-</option>
-                                    <option value="A+" {{ old('blood_type') == 'A+' ? 'selected' : '' }}>A+</option>
-                                    <option value="A-" {{ old('blood_type') == 'A-' ? 'selected' : '' }}>A-</option>
-                                    <option value="B+" {{ old('blood_type') == 'B+' ? 'selected' : '' }}>B+</option>
-                                    <option value="B-" {{ old('blood_type') == 'B-' ? 'selected' : '' }}>B-</option>
-                                    <option value="AB+" {{ old('blood_type') == 'AB+' ? 'selected' : '' }}>AB+</option>
-                                    <option value="AB-" {{ old('blood_type') == 'AB-' ? 'selected' : '' }}>AB-</option>
+                                    <x-blood-type-options :selected="old('blood_type')" placeholder="Select Blood Type" />
                                 </select>
                                 @error('blood_type')
                                     <div class="invalid-feedback">{{ $message }}</div>

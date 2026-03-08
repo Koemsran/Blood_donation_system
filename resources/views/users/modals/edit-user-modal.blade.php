@@ -30,8 +30,9 @@
                     <div class="mb-3">
                         <label class="form-label">Role</label>
                         <select class="form-select" id="editUserRole" name="role" required>
-                            <option value="user">User</option>
+                            <option value="donor">Donor</option>
                             <option value="admin">Admin</option>
+                            <option value="staff">Staff</option>
                         </select>
                         <div class="invalid-feedback"></div>
                     </div>

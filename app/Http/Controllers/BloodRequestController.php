@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\BloodType;
 use App\Models\BloodRequest;
 use App\Models\Patient;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class BloodRequestController extends Controller
 {
@@ -24,7 +26,7 @@ class BloodRequestController extends Controller
     {
         $validated = $request->validate([
             'patient_id' => 'required|exists:patients,id',
-            'blood_type' => 'required|string',
+            'blood_type' => ['required', Rule::in(BloodType::values())],
             'quantity' => 'required|integer|min:1',
         ]);
 

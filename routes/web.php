@@ -52,6 +52,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
     Route::get('/users', [UserManagementController::class, 'index'])->name('users.index');
     Route::post('/users', [UserManagementController::class, 'store'])->name('users.store');
+    Route::post('/users/{user}/donor-profile', [UserManagementController::class, 'storeDonorProfile'])->name('users.store-donor-profile');
+    Route::post('/users/{user}/staff-profile', [UserManagementController::class, 'storeStaffProfile'])->name('users.store-staff-profile');
     Route::put('/users/{user}', [UserManagementController::class, 'update'])->name('users.update');
     Route::delete('/users/{user}', [UserManagementController::class, 'destroy'])->name('users.destroy');
 

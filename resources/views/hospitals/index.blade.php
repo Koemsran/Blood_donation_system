@@ -4,15 +4,6 @@
 
 @section('page')
     <div class="hospitals-page">
-        <form action="{{ route('hospitals.index') }}" method="GET" class="hospitals-top-search hospitals-filter-form">
-            <i class="fas fa-magnifying-glass"></i>
-            <input type="text" name="search" value="{{ $search }}" placeholder="Search hospitals, requests, or contacts..." aria-label="Search hospitals" />
-            <select class="hospitals-status-filter" name="status" aria-label="Status Filter">
-                <option value="">All Status</option>
-                <option value="active" {{ $status === 'active' ? 'selected' : '' }}>Active</option>
-                <option value="inactive" {{ $status === 'inactive' ? 'selected' : '' }}>Inactive</option>
-            </select>
-        </form>
 
         <div class="hospitals-header">
             <div>
@@ -24,6 +15,16 @@
                 Add New Hospital
             </button>
         </div>
+        
+        <form action="{{ route('hospitals.index') }}" method="GET" class="hospitals-top-search hospitals-filter-form">
+            <i class="fas fa-magnifying-glass"></i>
+            <input type="text" name="search" value="{{ $search }}" placeholder="Search hospitals, requests, or contacts..." aria-label="Search hospitals" />
+            <select class="hospitals-status-filter" name="status" aria-label="Status Filter">
+                <option value="">All Status</option>
+                <option value="active" {{ $status === 'active' ? 'selected' : '' }}>Active</option>
+                <option value="inactive" {{ $status === 'inactive' ? 'selected' : '' }}>Inactive</option>
+            </select>
+        </form>
 
         <section class="hospitals-metrics-grid">
             <article class="hospitals-metric-card">

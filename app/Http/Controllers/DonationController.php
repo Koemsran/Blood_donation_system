@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\BloodType;
 use App\Models\BloodDonation;
 use App\Models\Donor;
 use Illuminate\Http\Request;
@@ -64,7 +65,7 @@ class DonationController extends Controller
     {
         $validated = $request->validate([
             'donor_id' => 'required|exists:donors,id',
-            'blood_group' => 'required|string|max:10',
+            'blood_group' => ['required', Rule::in(BloodType::values())],
             'donation_date' => 'required|date',
             'unit_volume' => 'required|integer|min:100|max:1000',
             'location' => 'required|string|max:255',

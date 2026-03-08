@@ -10,10 +10,6 @@
                 <p class="donors-subtitle">Manage, search and track all registered blood donors in the network.</p>
             </div>
             <div class="donors-actions">
-                <button class="btn btn-light btn-sm donors-action-btn">
-                    <i class="fas fa-download"></i>
-                    Export List
-                </button>
                 <button type="button" class="btn btn-danger btn-sm donors-action-btn" data-bs-toggle="modal" data-bs-target="#createDonorModal">
                     <i class="fas fa-user-plus"></i>
                     Add New Donor
@@ -88,7 +84,7 @@
                             <th>Blood Type</th>
                             <th>Last Donation</th>
                             <th>Status</th>
-                            <th>Location</th>
+                            <th>Contact</th>
                             <th>Actions</th>
                         </tr>
                     </thead>

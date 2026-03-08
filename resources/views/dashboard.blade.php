@@ -14,9 +14,6 @@
             <p>Welcome back. Monitoring central blood bank operations.</p>
         </div>
         <div>
-            <a href="{{ route('reports.index') }}" class="btn btn-outline-secondary btn-sm me-2 btn-export">
-                <i class="fas fa-download"></i> Export Data
-            </a>
             <a href="{{ route('inventory.index') }}" class="btn btn-danger btn-sm">
                 <i class="fas fa-plus"></i> Add Blood Stock
             </a>
@@ -90,7 +87,7 @@
         </div>
     </div>
 
-    <!-- Recent Donations & Pending Requests -->
+    <!-- Recent Donations -->
     <div class="bottom-grid">
         <!-- Recent Donations -->
         <div class="card card-clean">
@@ -134,41 +131,5 @@
             </div>
         </div>
 
-        <!-- Pending Requests -->
-        <div class="card card-clean">
-            <div class="card-body p-4">
-                <h5 class="requests-title">Pending Requests</h5>
-
-                <div class="requests-list">
-                    @forelse ($pendingRequests as $request)
-                        @php
-                            $priorityClass = $request->quantity >= 10 ? 'urgent' : ($request->quantity >= 5 ? 'priority' : 'routine');
-                            $priorityLabel = strtoupper($priorityClass);
-                        @endphp
-                        <div class="request-card">
-                            <div class="request-card-header">
-                                <h6>{{ $request->hospital?->name ?? 'Unknown Hospital' }}</h6>
-                                <span class="priority-badge {{ $priorityClass }}">{{ $priorityLabel }}</span>
-                            </div>
-                            <p class="request-desc">Request: {{ $request->quantity }} units of {{ strtoupper($request->blood_type) }}</p>
-                            <div class="request-actions">
-                                <form method="POST" action="{{ route('blood-requests.update-status', $request) }}">
-                                    @csrf
-                                    <input type="hidden" name="status" value="approved">
-                                    <button type="submit" class="btn-approve">Approve</button>
-                                </form>
-                                <form method="POST" action="{{ route('blood-requests.update-status', $request) }}">
-                                    @csrf
-                                    <input type="hidden" name="status" value="rejected">
-                                    <button type="submit" class="btn-reject">Reject</button>
-                                </form>
-                            </div>
-                        </div>
-                    @empty
-                        <p>No pending requests at the moment.</p>
-                    @endforelse
-                </div>
-            </div>
-        </div>
     </div>
 @endsection

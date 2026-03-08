@@ -20,10 +20,8 @@
                     <option value="6" {{ $months === 6 ? 'selected' : '' }}>Last 6 Months</option>
                     <option value="12" {{ $months === 12 ? 'selected' : '' }}>Last 12 Months</option>
                 </select>
-                <button type="submit" class="btn btn-light btn-sm reports-action-btn">Apply</button>
                 <a href="{{ route('reports.index') }}" class="btn btn-danger btn-sm reports-action-btn">
                     <i class="fas fa-download"></i>
-                    Refresh
                 </a>
             </form>
         </div>

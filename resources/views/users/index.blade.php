@@ -7,7 +7,7 @@
         <div class="users-header">
             <div>
                 <h1 class="users-title">User Management</h1>
-                <p class="users-subtitle">Efficiently manage system access for donors, staff, and hospital administrators.</p>
+                <p class="users-subtitle">Efficiently manage system access for donors, staff, and administrators.</p>
             </div>
             <button type="button" class="btn btn-danger btn-sm users-add-btn" data-bs-toggle="modal" data-bs-target="#createUserModal">
                 <i class="fas fa-user-plus"></i>
@@ -32,8 +32,9 @@
                 <label for="roleFilter">Role:</label>
                 <select id="roleFilter" name="role">
                     <option value="">All Roles</option>
-                    <option value="user" {{ $role === 'user' ? 'selected' : '' }}>User</option>
+                    <option value="donor" {{ $role === 'donor' ? 'selected' : '' }}>Donor</option>
                     <option value="admin" {{ $role === 'admin' ? 'selected' : '' }}>Admin</option>
+                    <option value="staff" {{ $role === 'staff' ? 'selected' : '' }}>Staff</option>
                 </select>
             </div>
 
@@ -143,4 +144,6 @@
 
     @include('users.modals.create-user-modal')
     @include('users.modals.edit-user-modal')
+    @include('users.modals.create-donor-profile-modal')
+    @include('users.modals.create-staff-profile-modal')
 @endsection

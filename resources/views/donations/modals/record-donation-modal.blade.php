@@ -24,7 +24,9 @@
 
                         <div class="col-md-6">
                             <label class="form-label" for="donationBloodGroup">Blood Group</label>
-                            <input type="text" class="form-control" id="donationBloodGroup" name="blood_group" value="{{ old('blood_group') }}" required>
+                            <select class="form-select" id="donationBloodGroup" name="blood_group" required>
+                                <x-blood-type-options :selected="old('blood_group')" placeholder="Select blood group" />
+                            </select>
                         </div>
 
                         <div class="col-md-6">

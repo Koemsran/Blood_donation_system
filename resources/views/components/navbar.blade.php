@@ -2,8 +2,8 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-danger">
     <div class="container-fluid">
         <a class="navbar-brand" href="{{ route('dashboard') }}">
-            <img src="{{ asset('images/logos/logo.svg') }}" alt="DonateMe Logo" height="40" class="me-2">
-            <span>DonateMe</span>
+            <img src="{{ asset('images/logos/logo.svg') }}" alt="Blood Donation Logo" height="40" class="me-2">
+            <span>Blood Donation</span>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">

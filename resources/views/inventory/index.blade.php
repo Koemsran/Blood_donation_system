@@ -10,10 +10,6 @@
                 <p class="inventory-subtitle">Real-time monitoring of blood stock and expiration status.</p>
             </div>
             <div class="inventory-actions">
-                <a href="{{ route('reports.index') }}" class="btn btn-light btn-sm inventory-action-btn">
-                    <i class="fas fa-download"></i>
-                    Export Data
-                </a>
                 <button type="button" class="btn btn-danger btn-sm inventory-action-btn" data-bs-toggle="modal" data-bs-target="#createStockModal">
                     <i class="fas fa-plus"></i>
                     Update Stock

@@ -28,8 +28,9 @@
                     <div class="mb-3">
                         <label class="form-label">Role</label>
                         <select class="form-select" name="role" required>
-                            <option value="user" {{ old('modal_form') === 'create' && old('role') === 'user' ? 'selected' : '' }}>User</option>
-                            <option value="admin" {{ old('modal_form') === 'create' && old('role') === 'admin' ? 'selected' : '' }}>Admin</option>
+                                <option value="donor" {{ old('modal_form') === 'create' && old('role') === 'donor' ? 'selected' : '' }}>Donor</option>
+                                <option value="admin" {{ old('modal_form') === 'create' && old('role') === 'admin' ? 'selected' : '' }}>Admin</option>
+                                <option value="staff" {{ old('modal_form') === 'create' && old('role') === 'staff' ? 'selected' : '' }}>Staff</option>
                         </select>
                         <div class="invalid-feedback"></div>
                     </div>

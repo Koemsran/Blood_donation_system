@@ -13,16 +13,25 @@
                         <div class="col-md-6">
                             <label for="stockBankId" class="form-label">Blood Bank</label>
                             <select id="stockBankId" name="blood_bank_id" class="form-select" required>
-                                <option value="">Select blood bank</option>
-                                @foreach ($bloodBanks as $bank)
-                                    <option value="{{ $bank->id }}" {{ old('blood_bank_id') == $bank->id ? 'selected' : '' }}>{{ $bank->name }}</option>
-                                @endforeach
+                                @if ($bloodBanks->isEmpty())
+                                    <option value="">No blood banks available</option>
+                                @else
+                                    <option value="">Select blood bank</option>
+                                    @foreach ($bloodBanks as $bank)
+                                        <option value="{{ $bank->id }}" {{ old('blood_bank_id') == $bank->id ? 'selected' : '' }}>{{ $bank->name }}</option>
+                                    @endforeach
+                                @endif
                             </select>
+                            @if ($bloodBanks->isEmpty())
+                                <small class="text-muted">Create a blood bank first from the Blood Banks page.</small>
+                            @endif
                         </div>
 
                         <div class="col-md-6">
                             <label for="stockBloodType" class="form-label">Blood Type</label>
-                            <input id="stockBloodType" name="blood_type" class="form-control" value="{{ old('blood_type') }}" placeholder="e.g. O+" required />
+                            <select id="stockBloodType" name="blood_type" class="form-select" required>
+                                <x-blood-type-options :selected="old('blood_type')" />
+                            </select>
                         </div>
 
                         <div class="col-md-6">

@@ -24,14 +24,7 @@
                     <div class="mb-3">
                         <label class="form-label">Blood Type</label>
                         <select class="form-select" id="editDonorBloodType" name="blood_type" required>
-                            <option value="A+">A+</option>
-                            <option value="A-">A-</option>
-                            <option value="B+">B+</option>
-                            <option value="B-">B-</option>
-                            <option value="AB+">AB+</option>
-                            <option value="AB-">AB-</option>
-                            <option value="O+">O+</option>
-                            <option value="O-">O-</option>
+                            <x-blood-type-options />
                         </select>
                     </div>
 

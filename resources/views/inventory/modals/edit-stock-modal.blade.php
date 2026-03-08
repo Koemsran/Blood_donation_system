@@ -23,7 +23,9 @@
 
                         <div class="col-md-6">
                             <label for="editStockBloodType" class="form-label">Blood Type</label>
-                            <input id="editStockBloodType" name="blood_type" class="form-control" required />
+                            <select id="editStockBloodType" name="blood_type" class="form-select" required>
+                                <x-blood-type-options />
+                            </select>
                         </div>
 
                         <div class="col-md-6">
