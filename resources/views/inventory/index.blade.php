@@ -64,7 +64,6 @@
                             <th>Blood Group</th>
                             <th>Current Stock</th>
                             <th>Status</th>
-                            <th>Reserve Level</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -91,7 +90,6 @@
                                     <div class="inventory-progress"><span class="inventory-progress-fill {{ $barColorClass }}" data-width="{{ $progressWidth }}"></span></div>
                                 </td>
                                 <td><span class="inventory-status {{ $statusClass }}">{{ $statusLabel }}</span></td>
-                                <td><span class="inventory-range">Min: 50 | Max: 300</span></td>
                                 <td>
                                     <button
                                         type="button"

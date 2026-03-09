@@ -5,17 +5,17 @@ namespace App\Http\Controllers;
 use App\Models\BloodDonation;
 use App\Models\BloodRequest;
 use App\Models\BloodStock;
+use App\Models\Donor;
 
 class DashboardController extends Controller
 {
     public function index()
     {
         $totalBloodStock = (int) BloodStock::sum('quantity');
-        $pendingRequestsCount = BloodRequest::where('status', 'pending')->count();
-        $todaysDonors = BloodDonation::query()
-            ->whereDate('donation_date', now()->toDateString())
-            ->distinct('donor_id')
-            ->count('donor_id');
+        $pendingRequestsCount = BloodDonation::where('status', 'pending')->count();
+        $todaysDonors = Donor::query()
+            ->whereDate('created_at', now()->toDateString())
+            ->count();
 
         $inventoryByType = BloodStock::query()
             ->selectRaw('blood_type, SUM(quantity) as total_units')
