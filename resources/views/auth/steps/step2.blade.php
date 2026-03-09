@@ -206,42 +206,7 @@
             @error('weight')<span class="err-msg">{{ $message }}</span>@enderror
         </div>
     </div>
-
-    <div class="two-col">
-        <div class="rg-group">
-            <label for="available_time">Available Time</label>
-            <div class="sw">
-                <select id="available_time" name="available_time"
-                        class="rs @error('available_time') is-invalid @enderror">
-                    <option value="" disabled selected>Select availability</option>
-                    <option value="morning"   {{ old('available_time')=='morning'   ?'selected':'' }}>Morning (6am–12pm)</option>
-                    <option value="afternoon" {{ old('available_time')=='afternoon' ?'selected':'' }}>Afternoon (12pm–5pm)</option>
-                    <option value="evening"   {{ old('available_time')=='evening'   ?'selected':'' }}>Evening (5pm–9pm)</option>
-                    <option value="anytime"   {{ old('available_time')=='anytime'   ?'selected':'' }}>Anytime</option>
-                </select>
-            </div>
-            @error('available_time')<span class="err-msg">{{ $message }}</span>@enderror
-        </div>
-        <div class="rg-group">
-            <label for="willing_to_donate">Willing to Donate Now?</label>
-            <div class="sw">
-                <select id="willing_to_donate" name="willing_to_donate" required
-                        class="rs @error('willing_to_donate') is-invalid @enderror">
-                    <option value="" disabled selected>Select option</option>
-                    <option value="yes"   {{ old('willing_to_donate')=='yes'   ?'selected':'' }}>Yes</option>
-                    <option value="no"    {{ old('willing_to_donate')=='no'    ?'selected':'' }}>No</option>
-                    <option value="maybe" {{ old('willing_to_donate')=='maybe' ?'selected':'' }}>Maybe</option>
-                </select>
-            </div>
-            @error('willing_to_donate')<span class="err-msg">{{ $message }}</span>@enderror
-        </div>
-    </div>
-
-    <label class="consent-row">
-        <input type="checkbox" name="consent" id="consent" required>
-        I voluntarily consent to donate blood and agree to any necessary medical checks before donation.
-    </label>
-
+    
     <div class="btn-row">
         <button type="button" class="btn-back" onclick="goStep(1)">← Back</button>
         <button type="submit" class="btn-red">

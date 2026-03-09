@@ -17,8 +17,8 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Age</label>
-                        <input type="number" class="form-control" id="editDonorAge" name="age" min="18" max="65" required>
+                        <label class="form-label">Date of Birth</label>
+                        <input type="date" class="form-control" id="editDonorDateOfBirth" name="date_of_birth" required>
                     </div>
 
                     <div class="mb-3">

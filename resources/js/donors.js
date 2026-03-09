@@ -54,7 +54,7 @@ const setupDonorEditModal = () => {
     const editButtons = document.querySelectorAll('[data-donor-edit]');
     const editForm = document.getElementById('editDonorForm');
     const editName = document.getElementById('editDonorName');
-    const editAge = document.getElementById('editDonorAge');
+    const editDateOfBirth = document.getElementById('editDonorDateOfBirth');
     const editBloodType = document.getElementById('editDonorBloodType');
     const editContact = document.getElementById('editDonorContact');
     const editLastDonation = document.getElementById('editDonorLastDonation');
@@ -67,7 +67,7 @@ const setupDonorEditModal = () => {
         button.addEventListener('click', () => {
             editForm.action = button.dataset.updateUrl || '#';
             if (editName) editName.value = button.dataset.donorName || '';
-            if (editAge) editAge.value = button.dataset.donorAge || '';
+            if (editDateOfBirth) editDateOfBirth.value = button.dataset.donorDateOfBirth || '';
             if (editBloodType) editBloodType.value = button.dataset.donorBloodType || '';
             if (editContact) editContact.value = button.dataset.donorContact || '';
             if (editLastDonation) editLastDonation.value = button.dataset.donorLastDonation || '';

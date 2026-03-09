@@ -135,7 +135,7 @@
                                             data-bs-target="#editDonorModal"
                                             data-update-url="{{ route('donors.update', $donor) }}"
                                             data-donor-name="{{ $donor->name }}"
-                                            data-donor-age="{{ $donor->age }}"
+                                            data-donor-date-of-birth="{{ $donor->date_of_birth?->format('Y-m-d') ?? '' }}"
                                             data-donor-blood-type="{{ $donor->blood_type }}"
                                             data-donor-contact="{{ $donor->contact }}"
                                             data-donor-last-donation="{{ $donor->last_donation_date?->format('Y-m-d') ?? '' }}"

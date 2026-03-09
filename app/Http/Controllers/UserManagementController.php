@@ -107,7 +107,7 @@ class UserManagementController extends Controller
     public function storeDonorProfile(Request $request, User $user)
     {
         $request->validate([
-            'age' => 'required|integer|min:18|max:65',
+            'date_of_birth' => 'required|date',
             'blood_type' => ['required', Rule::in(BloodType::values())],
             'contact' => 'required|string|max:255',
             'last_donation_date' => 'nullable|date',
@@ -115,7 +115,7 @@ class UserManagementController extends Controller
 
         Donor::create([
             'name' => $user->name,
-            'age' => (int) $request->input('age'),
+            'date_of_birth' => $request->input('date_of_birth'),
             'blood_type' => (string) $request->input('blood_type'),
             'contact' => (string) $request->input('contact'),
             'last_donation_date' => $request->input('last_donation_date') ?: null,

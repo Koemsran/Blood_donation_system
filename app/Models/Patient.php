@@ -8,10 +8,14 @@ class Patient extends Model
 {
     protected $fillable = [
         'name',
-        'age',
+        'date_of_birth',
         'blood_type',
         'hospital_id',
         'contact',
+    ];
+
+    protected $casts = [
+        'date_of_birth' => 'date',
     ];
 
     public function hospital()

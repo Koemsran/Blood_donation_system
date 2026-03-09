@@ -92,7 +92,7 @@ class DonorController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'age' => 'required|integer|min:18|max:65',
+            'date_of_birth' => 'required|date',
             'blood_type' => ['required', Rule::in(BloodType::values())],
             'contact' => 'required|string',
             'last_donation_date' => 'nullable|date',
@@ -116,7 +116,7 @@ class DonorController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'age' => 'required|integer|min:18|max:65',
+            'date_of_birth' => 'required|date',
             'blood_type' => ['required', Rule::in(BloodType::values())],
             'contact' => 'required|string',
             'last_donation_date' => 'nullable|date',

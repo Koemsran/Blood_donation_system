@@ -29,7 +29,9 @@ Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [LoginController::class, 'login']);
     Route::get('/register', [RegisterController::class, 'showRegisterForm'])->name('register');
-    Route::post('/register', [RegisterController::class, 'register']);
+    Route::post('/register/step1', [RegisterController::class, 'validateStep1'])->name('register.step1');
+    Route::post('/register', [RegisterController::class, 'register'])->name('register.submit');
+    Route::get('/register/cancel', [RegisterController::class, 'clearRegistration'])->name('register.clear');
     Route::get('/api/check-email', [RegisterController::class, 'checkEmailExists'])->name('check-email');
 });
 

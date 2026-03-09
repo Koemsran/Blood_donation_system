@@ -30,10 +30,10 @@
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="age" class="form-label">Age</label>
-                                <input type="number" class="form-control @error('age') is-invalid @enderror"
-                                    id="age" name="age" min="18" max="65" value="{{ old('age') }}" required>
-                                @error('age')
+                                <label for="date_of_birth" class="form-label">Date of Birth</label>
+                                <input type="date" class="form-control @error('date_of_birth') is-invalid @enderror"
+                                    id="date_of_birth" name="date_of_birth" value="{{ old('date_of_birth') }}" required>
+                                @error('date_of_birth')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>

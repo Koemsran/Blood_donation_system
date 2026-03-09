@@ -24,7 +24,7 @@
                 <div class="card-body">
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <p><strong>Age:</strong> {{ $donor->age }} years</p>
+                            <p><strong>Date of Birth:</strong> {{ $donor->date_of_birth ? \Carbon\Carbon::parse($donor->date_of_birth)->format('M d, Y') : 'N/A' }}</p>
                         </div>
                         <div class="col-md-6">
                             <p><strong>Blood Type:</strong> <span class="badge bg-danger">{{ $donor->blood_type }}</span></p>

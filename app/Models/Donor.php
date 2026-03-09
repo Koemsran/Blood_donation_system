@@ -8,13 +8,14 @@ class Donor extends Model
 {
     protected $fillable = [
         'name',
-        'age',
+        'date_of_birth',
         'blood_type',
         'contact',
         'last_donation_date',
     ];
 
     protected $casts = [
+        'date_of_birth' => 'date',
         'last_donation_date' => 'datetime',
     ];
 
