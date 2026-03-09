@@ -69,12 +69,18 @@ class DonationController extends Controller
             'donation_date' => 'required|date',
             'unit_volume' => 'required|integer|min:100|max:1000',
             'location' => 'required|string|max:255',
+            'blood_bank_id' => 'nullable|exists:blood_banks,id',
             'notes' => 'nullable|string|max:1000',
         ]);
 
         $validated['status'] = 'pending';
 
         BloodDonation::create($validated);
+
+        // Redirect to donor request page if user is a donor, otherwise to admin donations page
+        if (auth()->user()->role === 'donor') {
+            return redirect()->route('donors.request-donation')->with('success', 'Donation recorded and waiting for approval.');
+        }
 
         return redirect()->route('donations.index')->with('success', 'Donation recorded and waiting for approval.');
     }
@@ -97,6 +103,11 @@ class DonationController extends Controller
         }
 
         $donation->update($payload);
+
+        // Redirect to donor request page if user is a donor, otherwise to admin donations page
+        if (auth()->user()->role === 'donor') {
+            return redirect()->route('donors.request-donation')->with('success', 'Donation status updated.');
+        }
 
         return redirect()->route('donations.index')->with('success', 'Donation status updated.');
     }

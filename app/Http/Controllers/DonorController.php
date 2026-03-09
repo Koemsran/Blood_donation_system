@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Enums\BloodType;
+use App\Models\BloodBank;
+use App\Models\BloodDonation;
 use App\Models\Donor;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -80,6 +82,55 @@ class DonorController extends Controller
             'eligibleToday' => $eligibleToday,
             'pendingScreening' => $pendingScreening,
             'weeklyDonations' => $weeklyDonations,
+        ]);
+    }
+
+    public function donationHistory(Request $request)
+    {
+        $donationHistory = BloodDonation::query()
+            ->with(['donor:id,name', 'verifier:id,name'])
+            ->where('status', 'completed')
+            ->orderByDesc('donation_date')
+            ->orderByDesc('id')
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('donors.history', ['donationHistory' => $donationHistory]);
+    }
+
+    public function requestDonation(Request $request)
+    {
+        $search = trim((string) $request->query('search', ''));
+
+        $pendingApprovals = BloodDonation::query()
+            ->with('donor:id,name')
+            ->where('status', 'pending')
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($innerQuery) use ($search) {
+                    $innerQuery
+                        ->where('id', 'like', "%{$search}%")
+                        ->orWhere('location', 'like', "%{$search}%")
+                        ->orWhereHas('donor', function ($donorQuery) use ($search) {
+                            $donorQuery->where('name', 'like', "%{$search}%");
+                        });
+                });
+            })
+            ->orderByDesc('donation_date')
+            ->orderByDesc('id')
+            ->limit(8)
+            ->get();
+
+        // Get current user's donor profile by matching name
+        $currentUserDonor = Donor::where('name', auth()->user()->name)->first();
+        
+        // Get all blood banks
+        $bloodBanks = BloodBank::all();
+
+        return view('donors.request-donation', [
+            'pendingApprovals' => $pendingApprovals,
+            'currentUserDonor' => $currentUserDonor,
+            'bloodBanks' => $bloodBanks,
+            'search' => $search,
         ]);
     }
 

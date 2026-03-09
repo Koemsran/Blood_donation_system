@@ -12,6 +12,7 @@ class BloodDonation extends Model
         'donation_date',
         'unit_volume',
         'location',
+        'blood_bank_id',
         'status',
         'verified_by',
         'verified_at',

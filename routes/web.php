@@ -62,6 +62,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/users/{user}', [UserManagementController::class, 'destroy'])->name('users.destroy');
 
     // Donors Routes
+    Route::get('/donors/request-donation', [DonorController::class, 'requestDonation'])->name('donors.request-donation');
+    Route::get('/donors/donation-history', [DonorController::class, 'donationHistory'])->name('donors.donation-history');
     Route::resource('donors', DonorController::class);
 
     // Blood Banks Routes
