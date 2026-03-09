@@ -1,0 +1,27 @@
+/* ════════════════════════════════════════════════════════════
+   PROFILE EDIT PAGE STYLES
+   All styles for the profile settings page
+════════════════════════════════════════════════════════════ */
+
+.profile-container {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.profile-container h1 {
+    color: #dc3545;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.card {
+    border: none;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.card-header {
+    border-radius: 8px 8px 0 0 !important;
+    border: none;
+}

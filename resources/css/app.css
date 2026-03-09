@@ -6,6 +6,8 @@
 @import './donations.css';
 @import './reports.css';
 @import './users.css';
+@import './register.scss';
+@import './profile.scss';
 
 /* ============================================
    GLOBAL STYLING - SINGLE SOURCE OF TRUTH

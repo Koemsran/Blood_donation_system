@@ -58,5 +58,16 @@
             <i class="fas fa-file-alt"></i> 
             <span>Reports</span>
         </a>
+
+        <!-- Logout Link -->
+        <div class="nav-section-title">Account</div>
+        <form action="{{ route('logout') }}" method="POST" style="display: inline-block; width: 100%;">
+            @csrf
+            <button type="submit" class="sidebar-nav-link" style="width: 100%; text-align: left; background: none; border: none; cursor: pointer; color: inherit; padding: 12px 20px;">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </button>
+        </form>
+        
     </nav>
 </div>

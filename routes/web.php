@@ -10,6 +10,7 @@ use App\Http\Controllers\HospitalController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\UserManagementController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LogoutController;
@@ -29,6 +30,7 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [LoginController::class, 'login']);
     Route::get('/register', [RegisterController::class, 'showRegisterForm'])->name('register');
     Route::post('/register', [RegisterController::class, 'register']);
+    Route::get('/api/check-email', [RegisterController::class, 'checkEmailExists'])->name('check-email');
 });
 
 // Protected Routes - Require Authentication
@@ -69,4 +71,8 @@ Route::middleware('auth')->group(function () {
 
     // Logout Route
     Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
+
+    // Profile Routes
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 });

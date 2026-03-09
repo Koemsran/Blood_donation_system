@@ -12,7 +12,7 @@
             <div class="inventory-actions">
                 <button type="button" class="btn btn-danger btn-sm inventory-action-btn" data-bs-toggle="modal" data-bs-target="#createStockModal">
                     <i class="fas fa-plus"></i>
-                    Update Stock
+                    Add Stock
                 </button>
             </div>
         </div>
