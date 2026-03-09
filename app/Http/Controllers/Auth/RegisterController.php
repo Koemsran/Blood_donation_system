@@ -158,7 +158,7 @@ class RegisterController extends Controller
             ? route('profile.edit') 
             : route('dashboard');
 
-        return redirect()->route($redirectRoute)->with('success', 'Account created successfully!');
+        return redirect($redirectRoute)->with('success', 'Account created successfully!');
     }
 
     /**

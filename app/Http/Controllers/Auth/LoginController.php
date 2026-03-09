@@ -28,7 +28,7 @@ class LoginController extends Controller
                 ? route('profile.edit') 
                 : route('dashboard');
             
-            return redirect()->intended($redirectRoute)->with('success', 'Logged in successfully!');
+            return redirect($redirectRoute)->with('success', 'Logged in successfully!');
         }
 
         return back()->withErrors([
