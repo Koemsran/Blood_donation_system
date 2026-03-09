@@ -22,7 +22,13 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
-            return redirect()->intended(route('dashboard'))->with('success', 'Logged in successfully!');
+            
+            // Redirect donors to profile, others to dashboard
+            $redirectRoute = auth()->user()->role === 'donor' 
+                ? route('profile.edit') 
+                : route('dashboard');
+            
+            return redirect()->intended($redirectRoute)->with('success', 'Logged in successfully!');
         }
 
         return back()->withErrors([

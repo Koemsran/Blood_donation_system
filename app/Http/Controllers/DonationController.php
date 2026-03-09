@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\BloodType;
 use App\Models\BloodDonation;
 use App\Models\Donor;
+use App\Models\Staff;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -18,6 +19,14 @@ class DonationController extends Controller
         $pendingApprovals = BloodDonation::query()
             ->with('donor:id,name')
             ->where('status', 'pending')
+            ->when(auth()->user()->role === 'staff', function ($query) {
+                // Get the staff member's assigned blood bank
+                $staff = Staff::where('name', auth()->user()->name)->first();
+                if ($staff && $staff->assigned_bank_id) {
+                    return $query->where('blood_bank_id', $staff->assigned_bank_id);
+                }
+                return $query;
+            })
             ->when($search !== '', function ($query) use ($search) {
                 $query->where(function ($innerQuery) use ($search) {
                     $innerQuery

@@ -9,10 +9,12 @@
                 <h1 class="donations-title">Donations</h1>
                 <p class="donations-subtitle">Pending approvals and verified donation history.</p>
             </div>
-            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#recordDonationModal">
-                <i class="fas fa-circle-plus"></i>
-                Record Donation
-            </button>
+            @if(auth()->user()->role !== 'staff')
+                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#recordDonationModal">
+                    <i class="fas fa-circle-plus"></i>
+                    Record Donation
+                </button>
+            @endif
         </div>
 
         <section class="donations-card">

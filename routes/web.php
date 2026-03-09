@@ -19,7 +19,9 @@ use Illuminate\Support\Facades\Route;
 // Home Route
 Route::get('/', function () {
     if (auth()->check()) {
-        return redirect()->route('dashboard');
+        return auth()->user()->role === 'donor'
+            ? redirect()->route('profile.edit')
+            : redirect()->route('dashboard');
     }
     return redirect()->route('login');
 });

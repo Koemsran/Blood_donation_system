@@ -153,7 +153,12 @@ class RegisterController extends Controller
         // Login user
         Auth::login($user);
 
-        return redirect()->route('dashboard')->with('success', 'Account created successfully!');
+        // Redirect donors to profile, others to dashboard
+        $redirectRoute = auth()->user()->role === 'donor' 
+            ? route('profile.edit') 
+            : route('dashboard');
+
+        return redirect()->route($redirectRoute)->with('success', 'Account created successfully!');
     }
 
     /**
